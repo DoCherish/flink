@@ -2,6 +2,7 @@ package org.ourhome.common.util
 
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.java.utils.ParameterTool
+import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.ourhome.common.constant.CommonConstants._
 
@@ -30,6 +31,9 @@ object InitEnvUtil {
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     env.setParallelism(parameterTool.getInt(STREAM_PARALLELISM, 5))
     env.getConfig.disableSysoutLogging()
+
+    /**任务被取消时，保存checkpoint数据*/
+    env.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
 
     val restartAttempts: Int = parameterTool.getInt(STREAM_RESTART_ATTEMPT, 4)
     val delayBetweenAttempts: Int = parameterTool.getInt(STREAM_RESTART_DELAY_BETWEEN_ATTEMPTS_INTERVAL, 60000)
