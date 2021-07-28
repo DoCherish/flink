@@ -11,6 +11,8 @@ import org.apache.flink.streaming.api.functions.source.{RichParallelSourceFuncti
 /**
  * @Author Do
  * @Date 2021/7/25 22:38
+ * 自定义source
+ * 继承RichParallelSourceFunction和CheckpointedFunction
  */
 class MySource extends RichParallelSourceFunction[(Int, String)] with CheckpointedFunction {
 

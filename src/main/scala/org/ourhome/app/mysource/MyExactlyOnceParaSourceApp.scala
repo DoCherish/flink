@@ -21,11 +21,12 @@ object MyExactlyOnceParaSourceApp {
     //    val parameterTool: ParameterTool = createParameterTool(args)
     //    val env: StreamExecutionEnvironment = prepare(parameterTool)
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-
     env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime)
-    env.enableCheckpointing(1*1000)
+
+    env.enableCheckpointing(1*1000, CheckpointingMode.EXACTLY_ONCE)
     env.getCheckpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
     env.getConfig.setRestartStrategy(RestartStrategies.fixedDelayRestart(4, 3*1000))
+
     env.setStateBackend(new FsStateBackend("file:///D:\\Work\\Code\\flink\\src\\main\\resources\\checkpoint\\chk1"))
 
     process(env)
